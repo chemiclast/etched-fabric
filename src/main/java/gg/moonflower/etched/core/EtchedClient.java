@@ -1,5 +1,6 @@
 package gg.moonflower.etched.core;
 
+import gg.moonflower.etched.client.render.item.AlbumImageModelLoadingPlugin;
 import gg.moonflower.etched.client.screen.*;
 import gg.moonflower.etched.common.entity.MinecartJukebox;
 import gg.moonflower.etched.common.menu.AlbumCoverMenu;
@@ -7,6 +8,8 @@ import gg.moonflower.etched.common.menu.AlbumJukeboxMenu;
 import gg.moonflower.etched.core.registry.EtchedMenus;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -55,17 +58,16 @@ public class EtchedClient {
         });*/
     }
 
-    //TODO: FIX`
-    /*
-    @SubscribeEvent
-    public static void registerCustomModels(ModelEvent.RegisterAdditional event) {
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        String folder = "models/item/" + AlbumCoverItemRenderer.FOLDER_NAME;
-        event.register(new ModelResourceLocation(new ResourceLocation(Etched.MOD_ID, "boombox_in_hand"), "inventory"));
-        for (ResourceLocation location : resourceManager.listResources(folder, name -> name.getPath().endsWith(".json")).keySet()) {
-            event.register(new ModelResourceLocation(new ResourceLocation(location.getNamespace(), location.getPath().substring(12, location.getPath().length() - 5)), "inventory"));
-        }
+    //TODO: FIX
+
+    public static void registerCustomModels() {
+        ModelLoadingPlugin.register(new AlbumImageModelLoadingPlugin());
+        AlbumCoverItemRenderer.init();
+        BuiltinItemRendererRegistry.INSTANCE.register(EtchedItems.ALBUM_COVER.get(), AlbumCoverItemRenderer.INSTANCE::renderByItem);
+        // event.register(new ModelResourceLocation(new ResourceLocation(Etched.MOD_ID, "boombox_in_hand"), "inventory"));
     }
+
+    /*
 
     @SubscribeEvent
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {

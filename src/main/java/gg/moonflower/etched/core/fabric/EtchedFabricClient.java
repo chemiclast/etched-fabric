@@ -34,5 +34,6 @@ public class EtchedFabricClient implements ClientModInitializer {
             return ItemStack.EMPTY;
         });
         EtchedClient.registerItemColors();
+        EtchedClient.registerCustomModels();
     }
 }

@@ -9,6 +9,8 @@ import gg.moonflower.etched.api.record.PlayableRecord;
 import gg.moonflower.etched.common.item.AlbumCoverItem;
 import gg.moonflower.etched.core.Etched;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,6 +32,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.RandomSource;
@@ -48,7 +51,7 @@ import java.util.concurrent.Executor;
 /**
  * @author Ocelot
  */
-public class AlbumCoverItemRenderer extends BlockEntityWithoutLevelRenderer implements PreparableReloadListener {
+public class AlbumCoverItemRenderer extends BlockEntityWithoutLevelRenderer implements IdentifiableResourceReloadListener {
 
     public static final AlbumCoverItemRenderer INSTANCE = new AlbumCoverItemRenderer();
     public static final String FOLDER_NAME = Etched.MOD_ID + "_album_cover";
@@ -73,10 +76,9 @@ public class AlbumCoverItemRenderer extends BlockEntityWithoutLevelRenderer impl
         this.data = null;
     }
 
-    @Deprecated
     public static void init() {
-//        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, INSTANCE, new ResourceLocation(Etched.MOD_ID, "builtin_album_cover"));
-//        ClientNetworkEvent.DISCONNECT.register((controller, player, connection) -> INSTANCE.close());
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(INSTANCE);
+//      ClientNetworkEvent.DISCONNECT.register((controller, player, connection) -> INSTANCE.close());
     }
 
     public static NativeImage getOverlayImage() {
@@ -168,6 +170,11 @@ public class AlbumCoverItemRenderer extends BlockEntityWithoutLevelRenderer impl
         poseStack.translate(0.5D, 0.5D, 0.5D);
         model.render(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
         poseStack.popPose();
+    }
+
+    @Override
+    public ResourceLocation getFabricId() {
+        return new ResourceLocation(Etched.MOD_ID, "builtin_album_cover");
     }
 
     public static class CoverData {
