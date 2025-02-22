@@ -23,6 +23,7 @@
     "RecordItemMixin",
     "StructureTemplatePoolAccessor",
     "VillagerGoalPackagesMixin",
+    "LevelRendererAccessor",
     "fabric.EntityMixin"
   ],
   "injectors": {
